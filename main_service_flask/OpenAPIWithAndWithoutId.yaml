@@ -1,0 +1,566 @@
+openapi: 3.0.3
+info:
+  title: Сервис стажёров
+  description: Добавление, чтение, обновление и удаление информации о кандидатах в стажёры и стажировках
+  version: '1.0'
+servers:
+  - url: https://localhost:8080/api/v1
+
+paths:
+  /candidates:
+    get:
+      summary: Получить список всех кандидатов в стажёры
+      operationId: getCandidates
+      tags:
+        - Candidates
+      parameters:
+        - name: candidateName
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidatePhone
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateEmail
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateSkills
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+            example: []
+        - name: candidatePosition
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateHours
+          in: query
+          schema:
+            type: integer
+        - name: candidateEmploymentType
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Количество кандидатов на одной странице
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          description: Количество кандидатов, которые следует пропустить перед возвращением результатов
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: sortBy
+          in: query
+          description: Поле по которому сортировать
+          required: false
+          schema:
+            type: string
+            example: "name"
+        - name: sortOrder
+          in: query
+          description: Порядок сортировки (asc - порядок возрастания для чисел, алфавитный порядок для строк, dsc - наоборот)
+          required: false
+          schema:
+            type: string
+            enum:
+            - "asc"
+            - "dsc"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CandidateWithId'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error (если сервер не может обработать запрос)
+    post:
+      summary: Добавить кандидата в стажёры
+      operationId: addCandidate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateWithId'
+        '400':
+          description: Bad request
+        '409':
+          description: Candidate already exists (если кандидат с такими данными уже существует)
+      tags:
+      - Candidates
+  /candidates/{candidateID}:
+    get:
+      summary: Получить кандидата в стажеры по ID
+      operationId: getCandidatebyID
+      parameters:
+        - name: candidateID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateWithId'
+        '404':
+          description: Candidate not found
+        '400':
+          description: Bad request
+      tags:
+      - Candidates
+    put:
+      summary: Обновить данные кандидата в стажёры
+      operationId: updateCandidate
+      parameters:
+        - name: candidateID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+        required: true
+      responses:
+        '200':
+          description: успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CandidateWithId'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+      tags:
+      - Candidates
+    delete:
+      summary: Удалить кандидата в стажёры
+      operationId: deleteCandidate
+      parameters:
+        - name: candidateID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not found
+      tags:
+      - Candidates
+  /candidates/external:
+    post:
+      summary: Импортировать в базу данных стажёров из CSV файла
+      operationId: importCandidates
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSV file
+      responses:
+        '200':
+          description: Импортирование завершенно успешно
+      tags:
+      - Candidates
+    get:
+      summary: Экспортировать таблицу стажёров из базы данных в CSV файл
+      operationId: exportCandidates
+      parameters:
+        - name: candidateName
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidatePhone
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateEmail
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateSkills
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+            example: []
+        - name: candidatePosition
+          in: query
+          schema:
+            type: string
+            example: ""
+        - name: candidateHours
+          in: query
+          schema:
+            type: integer
+        - name: candidateEmploymentType
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Количество кандидатов на одной странице
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          description: Количество кандидатов, которые следует пропустить перед возвращением результатов
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: sortBy
+          in: query
+          description: Поле по которому сортировать
+          required: false
+          schema:
+            type: string
+            example: "name"
+        - name: sortOrder
+          in: query
+          description: Порядок сортировки (asc - порядок возрастания для чисел, алфавитный порядок для строк, dsc - наоборот)
+          required: false
+          schema:
+            type: string
+            enum:
+            - "asc"
+            - "dsc"
+      responses:
+        '200':
+          description: Экспортирование завершенно успешно
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+      tags:
+      - Candidates
+
+  /internships:
+    get:
+      summary: Получить список всех стажировок
+      operationId: getInternships
+      parameters:
+        - name: position
+          in: query
+          description: Фильтрация стажировок по должности
+          required: false
+          schema:
+            type: string
+            example: "Junior Backend Developer"
+        - name: department
+          in: query
+          description: Фильтрация стажировок по департаменту
+          required: false
+          schema:
+            type: string
+            example: "ДРВПО"
+        - name: limit
+          in: query
+          description: Количество стажировок на одной странице
+          required: false
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+        - name: offset
+          in: query
+          description: Количество стажировок, которые следует пропустить перед возвращением результатов
+          required: false
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+        - name: sortBy
+          in: query
+          description: Поле по которому сортировать
+          required: false
+          schema:
+            type: string
+            example: "name"
+        - name: sortOrder
+          in: query
+          description: Порядок сортировки (asc - порядок возрастания для чисел, алфавитный порядок для строк, dsc - наоборот)
+          required: false
+          schema:
+            type: string
+            enum:
+            - "asc"
+            - "dsc"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InternshipWithId'
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+        '400':
+          description: Error
+      tags:
+        - Internships
+    post:
+      summary: Добавить запрос на стажёра
+      operationId: addInternship
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Internship'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InternshipWithId'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/InternshipWithId'
+        '400':
+          description: Bad request
+      tags:
+        - Internships
+  /internships/{internshipId}:
+    get:
+      summary: Получить стажировку по ID
+      operationId: getInternshipbyID
+      parameters:
+        - name: internshipId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipWithId'
+        '404':
+          description: Not found
+      tags:
+        - Internships
+    put:
+      summary: Обновить запрос на стажёра
+      operationId: updateInternship
+      parameters:
+        - name: internshipId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6" 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Internship'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipWithId'
+        '404':
+          description: Not found
+      tags:
+        - Internships
+    delete:
+      summary: Удалить запрос на стажёра
+      operationId: deleteInternship
+      parameters:
+        - name: internshipId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6" 
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not found
+      tags:
+        - Internships
+   
+components:
+  schemas:
+    CandidateWithId:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6" 
+        body:
+          $ref: "#/components/schemas/Candidate"
+    Candidate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Иванов Иван Иванович
+        email:
+          type: string
+          format: email
+          example: example@example.com
+        phone:
+          type: string
+          format: phone
+          example: '+77777777777'
+        position:
+          type: string
+        education:
+          type: string
+        skills:
+          type: string
+        experience:
+          type: string
+        hoursPerWeek:
+          type: integer
+          minimum: 20
+          maximum: 40
+        employmentType:
+          type: string
+          enum:
+            - в офисе
+            - удалённо
+            - гибрид
+        links:
+          type: string
+        pathToResume:
+          type: string
+    InternshipWithId:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
+        body:
+          $ref: "#/components/schemas/Internship"
+    Internship:
+      type: object
+      properties:
+        position:
+          type: string
+        education:
+          type: string
+        skills:
+          type: string
+        department:
+          type: string
+        hoursPerWeek:
+          type: integer
+          minimum: 20
+          maximum: 40
+        employmentType:
+          type: string
+          enum:
+            - в офисе
+            - удалённо
+            - гибрид
+        description:
+          type: string
+        status:
+          type: string
+          enum:
+            - просмотрено
+            - отложено
+            - заблокировано
+    Pagination:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Общее количество стажировок
+        limit:
+          type: integer
+          description: Количество стажировок на одной странице
+        offset:
+          type: integer
+          description: Количество пропущенных стажировок
+        remaining:
+          type: integer
+          description: Количество оставшихся стажировок (Общее количество минус количество на текущей странице)
+tags:
+  - name: Candidates
+  - name: Internships

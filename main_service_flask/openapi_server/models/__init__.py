@@ -1,0 +1,10 @@
+# flake8: noqa
+# import models into model package
+from openapi_server.models.add_internship200_response import AddInternship200Response
+from openapi_server.models.candidate import Candidate
+from openapi_server.models.candidate_with_id import CandidateWithId
+from openapi_server.models.get_candidates200_response import GetCandidates200Response
+from openapi_server.models.get_internships200_response import GetInternships200Response
+from openapi_server.models.internship import Internship
+from openapi_server.models.internship_with_id import InternshipWithId
+from openapi_server.models.pagination import Pagination

@@ -1,0 +1,11 @@
+name,email,phone,position,education,skills,experience,hours_per_week,employment_type,links,path_to_resume
+Богданова Ирина,irina.front@gmail.com,89180009922,Front-end разработчик,МГУ,"React, HTML, CSS",1,25,удалённо,https://linkedin.com/in/irinadev,/resumes/bogdanova_resume.pdf
+Васильев Алексей,vasiliev.ios@gmail.com,89225557788,iOS разработчик,ИТМО,"Swift, Xcode, Coredata",2,26,удалённо,https://github.com/vasilievios,/resumes/vasiliev_resume.pdf
+Власова Марина,marina.pm@gmail.com,89201112200,Product Manager,ТУСУР,"Jira, Product, Agile",4,29,"удалённо, гибрид, в офисе",https://linkedin.com/in/marinapm,/resumes/vlasova_resume.pdf
+Галимов Тимур,timur.js@gmail.com,89001110022,JavaScript разработчик,СПбГЭТУ ЛЭТИ,"JavaScript, React, Node.Js",2,22,в офисе,https://github.com/timurjs,/resumes/galimov_resume.pdf
+Григорьева Дарья,daria.ai@gmail.com,89001231234,ML инженер,МГТУ им. Баумана,"Python, Pytorch, Numpy",4,40,удалённо,https://github.com/dariaai,/resumes/grigorieva_resume.pdf
+Громов Данила,danila.dev@gmail.com,89001112233,Back-end разработчик,МГТУ им. Баумана,"Node.Js, Express, Mongo",2,28,гибрид,https://github.com/danila,/resumes/gromov_resume.pdf
+Егоров Олег,oleg.node@gmail.com,89172228888,Back-end разработчик,КФУ,"PostgreSQL, Node.Js, Express",2,28,гибрид,https://github.com/olegnode,/resumes/egorov_resume.pdf
+Иванов Иван,ivanov01@gmail.com,89991112233,Back-end разработчик,МГТУ им. Баумана,"PostgreSQL, Python, Docker",2,30,гибрид,https://github.com/ivanov01,/resumes/ivanov_resume.pdf
+Иванов Иван Иванович,example2@example.com,+77777777777,Junior Backend Developer,Высшее,"SQL, JavaScript, Python, Git",1 год,20,"удалённо, гибрид",https://github.com/user,wedfqwec
+Иванов Иван Иванович,example@example.com,+77777777777,position,education,Git,1,21,удалённо,links,pathToResume
