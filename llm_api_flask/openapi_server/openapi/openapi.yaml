@@ -1,0 +1,56 @@
+openapi: 3.0.3
+info:
+  description: "Обработка файлов (.pdf, .docx, .doc, etc.)"
+  title: Контракт для сервиса LLM
+  version: "1.0"
+servers:
+- url: https://LLMServer
+paths:
+  /FileParser:
+    post:
+      operationId: parse_file
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/parse_file_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                candidateName: Иванов Иван Иванович
+                candidatePhone: "+77777777777"
+                candidateEmail: example@example.com
+                candidateSkills: "python, git, etc"
+                candidatePosition: junior backend
+                candidateHours: "30"
+                candidateEmploymentType: гибрид
+              schema:
+                description: Candidate model is set up in config file
+                type: object
+          description: File successfully parsed
+        "400":
+          content:
+            application/json:
+              schema:
+                example:
+                  wrong_parameter: wrong_value
+                type: object
+          description: User input error
+        "500":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+      x-openapi-router-controller: openapi_server.controllers.default_controller
+components:
+  schemas:
+    parse_file_request:
+      properties:
+        file:
+          description: Resume file
+          format: binary
+          type: string
+      type: object

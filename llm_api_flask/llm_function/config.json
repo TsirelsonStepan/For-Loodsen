@@ -1,0 +1,3 @@
+{
+    "prompt" : "You will be provided a schema for the answer and text of the resume. Read the text of the resume and extract data from it strictly following schema. If you can not find data in provided text, fill field with empty string or 0 value. Format phone number into standard version with no brackets and spaces and under 15 characters. If needed cut the strings to fit into the number of characters description. Fill in schema and return json of it."
+}
